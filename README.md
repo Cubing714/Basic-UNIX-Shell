@@ -21,5 +21,5 @@ This is a lightweight custom shell implemented in C. It allows users to execute 
 ## Installation
 1. Clone this repository:
    ```bash
-   git clone https://github.com/yourusername/custom-shell.git
-   cd custom-shell
+   git clone https://github.com/Cubing714/Basic-UNIX-Shell.git
+   cd Basic-UNIX-Shell

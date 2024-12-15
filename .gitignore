@@ -1,0 +1,17 @@
+# Ignore compiled object files and binaries
+*.o
+*.out
+*.a
+
+# Ignore executables
+shell
+
+# Ignore editor and IDE files
+.vscode/
+.idea/
+
+# Ignore system files
+.DS_Store
+
+# Ignore backup files created by editors (e.g., Vim)
+*~
