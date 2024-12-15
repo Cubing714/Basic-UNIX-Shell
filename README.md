@@ -11,7 +11,7 @@ This is a lightweight custom shell implemented in C. It allows users to execute 
   - `ls`: List files in a directory
   - `echo`: Print arguments to the terminal
   - `find`: Search for files in a directory
-  - `mf`: Create a new file if it doesn’t exist
+  - `mkf`: Create a new file if it doesn’t exist
 - Error handling for invalid commands or paths
 
 ## Requirements

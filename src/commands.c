@@ -1,14 +1,4 @@
 #include "../include/commands.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <string.h>
-#include <sys/types.h>
-#include <bits/waitflags.h>
-#include <dirent.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-
 
 char* builtin_str[] = {
     "cd",
@@ -20,7 +10,8 @@ char* builtin_str[] = {
     "mkf",
     "find",
     "mkdir",
-    "clear"
+    "clear",
+    "rm"
 };
 
 // Array of pointers to builtin functions
@@ -34,7 +25,8 @@ int (*builtin_func[]) (char**) = {
     &lsh_mkf,
     &lsh_find,
     &lsh_mkdir,
-    &lsh_clear
+    &lsh_clear,
+    &lsh_rm
 };
 
 int lsh_num_builtins() {
@@ -103,7 +95,7 @@ int lsh_echo(char** args) {
         }
     }
 
-
+    free(buffer);
     return 1;
 }
 
@@ -228,5 +220,20 @@ int lsh_mkdir(char** args) {
 
 int lsh_clear(char** args) {
     system("clear");
+    return 1;
+}
+
+int lsh_rm(char** args) {
+    if (args[1] == NULL) {
+        fprintf(stderr, "lsh: expected argument to \"rm\"\n");
+        return 1;
+    }
+
+    if (strcmp(args[1], "-r") == 0 && args[2] != NULL) {
+        // Remove directory recursively
+        rm_recursive(args[2]);
+    } else {
+        rm_file(args[1]);
+    }
     return 1;
 }

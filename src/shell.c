@@ -6,7 +6,7 @@ void lsh_loop(void) {
     int status;
 
     do {
-        printf("\n%s: > ", get_cwd());
+        printf("\nSimpleShell:%s > ", get_cwd_display());
         line = lsh_read_line();
         args = lsh_split_line(line);
         status = lsh_execute(args);
@@ -131,13 +131,32 @@ int lsh_execute(char** args) {
 }
 
 #define GET_CWD_BUFSIZE 1024
-char* get_cwd(void) {
-    static int bufsize = GET_CWD_BUFSIZE;
+char* get_cwd_display(void) {
+    int bufsize = GET_CWD_BUFSIZE;
+
+    static char shell_cwd[GET_CWD_BUFSIZE] = "";
+     // If this is the first time, get the C-Shell directory
+    if (strlen(shell_cwd) == 0) {
+        if (getcwd(shell_cwd, GET_CWD_BUFSIZE) == NULL) {
+            perror("getcwd");
+            exit(EXIT_FAILURE);
+        }
+    }
+
+    // Get cwd
     char* buffer = malloc(bufsize * sizeof(char));
     if (getcwd(buffer, bufsize) == NULL) {
         perror("lsh");
         free(buffer);
         exit(EXIT_FAILURE);
     }
-    return buffer;
+
+    char* relative_path = "";
+    // Check if the current directory starts with the shell directory
+    if (strncmp(buffer, shell_cwd, strlen(shell_cwd)) == 0) {
+        // Display the path starting from the shell directory (relative)
+        relative_path = buffer + strlen(shell_cwd);  // Display relative path from C-Shell directory
+    }
+
+    return relative_path;
 }
