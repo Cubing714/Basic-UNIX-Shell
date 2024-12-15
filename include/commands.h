@@ -15,6 +15,7 @@ int lsh_ls(char** args);
 int lsh_mkf(char** args);
 int lsh_find(char** args);
 int lsh_mkdir(char** args);
+int lsh_clear(char** args);
 
 extern char* builtin_str[];
 

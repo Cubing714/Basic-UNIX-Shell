@@ -18,7 +18,9 @@ char* builtin_str[] = {
     "echo",
     "ls",
     "mkf",
-    "find"
+    "find",
+    "mkdir",
+    "clear"
 };
 
 // Array of pointers to builtin functions
@@ -31,7 +33,8 @@ int (*builtin_func[]) (char**) = {
     &lsh_ls,
     &lsh_mkf,
     &lsh_find,
-    &lsh_mkdir
+    &lsh_mkdir,
+    &lsh_clear
 };
 
 int lsh_num_builtins() {
@@ -209,5 +212,21 @@ int lsh_find(char** args) {
 }
 
 int lsh_mkdir(char** args) {
+    if (args[1] == NULL) {
+        fprintf(stderr, "lsh: mkdir: missing operand\n");
+        return 1;
+    }
+
+    if (mkdir(args[1], 0777) == -1) {
+        perror("lsh");
+        return 1;
+    }
+
+    printf("Directory '%s' created successfully.\n", args[1]);
+    return 1;
+}
+
+int lsh_clear(char** args) {
+    system("clear");
     return 1;
 }
