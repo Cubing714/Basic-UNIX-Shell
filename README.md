@@ -4,8 +4,7 @@
 This is a lightweight custom shell implemented in C. It allows users to execute basic Linux commands, manage files, and perform simple operations directly from the terminal. The shell includes a few built-in commands for additional functionality.
 
 ## Features
-- Execution of standard Linux commands
-- Built-in commands:
+  - Built-in commands:
   - `cd`: Change the current working directory
   - `pwd`: Display the current working directory
   - `ls`: List files in a directory
