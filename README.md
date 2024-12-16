@@ -39,12 +39,11 @@ This is a lightweight custom shell implemented in C. It allows users to execute 
    ```
 
   OR
-   ```bash
+   
    ./bin/shell
-   ```
+   
 
 2. Setup an alias to run directly from the project directory using a command
    ```bash
    alias simpleshell=" /path/to/project/Basic-UNIX-Shell/bin/shell"
    source ~/.bashrc
-   ```
