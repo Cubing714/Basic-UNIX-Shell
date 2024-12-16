@@ -6,15 +6,19 @@ LDFLAGS =                       # Linker flags (if any)
 # Directories
 SRC_DIR = ./src
 OBJ_DIR = ./obj
-BUILD_DIR = ./build
+BIN_DIR = ./bin
 
 # Files
 SOURCES = $(SRC_DIR)/main.c $(SRC_DIR)/shell.c $(SRC_DIR)/commands.c $(SRC_DIR)/utils.c    # Add your .c files here
 OBJECTS = $(OBJ_DIR)/main.o $(OBJ_DIR)/shell.o $(OBJ_DIR)/commands.o $(OBJ_DIR)/utils.o   # Corresponding .o files
-EXEC = $(BUILD_DIR)/shell        # Final executable
+EXEC = $(BIN_DIR)/shell        # Final executable
 
 # Default target (make all)
-all: $(EXEC)
+all: $(BIN_DIR) $(EXEC)
+
+# Create the bin directory if it doesn't exist
+$(BIN_DIR):
+	mkdir -p $(BIN_DIR)
 
 # Rule to link object files into the final executable
 $(EXEC): $(OBJECTS)
@@ -26,7 +30,7 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 
 # Clean up generated files
 clean:
-	rm -f $(OBJ_DIR)/*.o $(EXEC)
+	rm -rf $(OBJ_DIR) $(BIN_DIR)
 
 # Phony target (not a file)
 .PHONY: all clean

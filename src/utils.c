@@ -53,5 +53,4 @@ void rm_recursive(const char* path) {
 
     // Now that directory is empty and closed it removes itself
     rm_directory(path);
-    printf("Removed directory: %s\n", path);
 } 

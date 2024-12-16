@@ -3,6 +3,9 @@
 *.out
 *.a
 
+#Ignore user-specific files
+home/
+
 # Ignore executables
 shell
 
