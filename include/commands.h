@@ -12,7 +12,9 @@
 #include <dirent.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include <linux/limits.h>
+
+#define PATH_MAX 4096
+
 /*
 List of built-in commands and their corresponding functions
 */

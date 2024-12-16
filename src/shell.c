@@ -19,7 +19,6 @@ void lsh_loop(void) {
         free(line);
         free(args);
     } while (status);
-    free(project_dir);
 }
 
 #define LSH_RL_BUFSIZE 1024
