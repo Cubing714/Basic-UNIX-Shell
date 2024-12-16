@@ -91,35 +91,6 @@ char** lsh_split_line(char* line) {
     return tokens;
 }
 
-int lsh_launch(char** args) {
-    pid_t pid;
-    int status;
-
-    pid = fork();
-    if (pid == 0) {
-        // Child process
-        // args[0] is the program name
-        // args is the rest of the arguments
-        // execvp expects a program name and a array/string of arguments
-        if (execvp(args[0], args) == -1) {
-            perror("lsh");
-        }
-        exit(EXIT_FAILURE);
-    } else if (pid < 0) {
-        // Error forking
-        perror("lsh");
-    } else {
-        // Parent process
-        do {
-            waitpid(pid, &status, WUNTRACED);
-        } while (!WIFEXITED(status) && !WIFSIGNALED(status));
-        // WIFEXITED checks if the process was terminated normally
-        // WIFSIGNALED checks if the process was terminated by signal
-    }
-    
-    return 1;
-}
-
 int lsh_execute(char** args) {
     if (args[0] == NULL) {
         // An empty command was entered
@@ -132,7 +103,8 @@ int lsh_execute(char** args) {
         }
     }
 
-    return lsh_launch(args);
+    printf("Command: \"%s\" not recognized\n", args[0]);
+    return 1;
 }
 
 #define SHELL_INIT_PATH "./home"

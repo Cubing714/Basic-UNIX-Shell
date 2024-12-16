@@ -26,7 +26,6 @@ typedef struct Command {
 // For reference around shell
 extern Command builtin_commands[];
 
-
 /*
 List of built-in commands and their corresponding functions
 */
