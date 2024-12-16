@@ -8,6 +8,9 @@
 #include <sys/wait.h>
 #include "commands.h"
 
+#define MAX_NUM_DIRECTORIES 100
+#define MAX_FILENAME_CHAR_LEN 255
+
 // Global Variables [ Please dont be mad at me ]
 extern const char* project_dir;
 

@@ -12,6 +12,7 @@
 #include <dirent.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <dirent.h>
 
 #define PATH_MAX 4096
 

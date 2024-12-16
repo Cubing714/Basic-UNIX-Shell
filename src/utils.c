@@ -79,3 +79,11 @@ char* strip_home_suffix(char* project_dir) {
 
     return project_dir;
 }
+
+int compare_strings(const void* a, const void* b) {
+    // Cast the void pointers to string pointers
+    const char *str_a = *(const char**)a;
+    const char *str_b = *(const char**)b;
+
+    return strcmp(str_a, str_b);
+}

@@ -2,17 +2,17 @@
 #include "../include/shell.h"
 
 Command builtin_commands[] = {
-    {"cd", 0, &lsh_cd},
-    {"help", 0, &lsh_help},
-    {"exit", 0, &lsh_exit},
-    {"pwd", 0,  &lsh_pwd},
-    {"echo", 0, &lsh_echo},
-    {"ls", 0, &lsh_ls},
-    {"mkf", 0, &lsh_mkf},
-    {"find", 0, &lsh_find},
-    {"mkdir", 0, &lsh_mkdir},
-    {"clear", 0, &lsh_clear},
-    {"rm", 0, &lsh_rm},
+    {"cd", 1, &lsh_cd},
+    {"help", 1, &lsh_help},
+    {"exit", 1, &lsh_exit},
+    {"pwd", 1,  &lsh_pwd},
+    {"echo", 1, &lsh_echo},
+    {"ls", 1, &lsh_ls},
+    {"mkf", 1, &lsh_mkf},
+    {"find", 1, &lsh_find},
+    {"mkdir", 1, &lsh_mkdir},
+    {"clear", 1, &lsh_clear},
+    {"rm", 1, &lsh_rm},
 };
 
 
@@ -115,14 +115,42 @@ int lsh_ls(char** args) {
         exit(EXIT_FAILURE);
     }
 
+    char** d_name_arr = malloc(MAX_NUM_DIRECTORIES * sizeof(char*));
+    int d_count = 0;
+
+    char** f_name_arr = malloc(MAX_NUM_DIRECTORIES * sizeof(char*));
+    int f_count = 0;
 
     while ((dr = readdir(dir))) {
         // Skip the current (.) and parent (..) directory entries
         if (strcmp(dr->d_name, ".") != 0 && strcmp(dr->d_name, "..") != 0){
-            printf("\t%s\n", dr->d_name);
+            if (dr->d_type == DT_DIR) {
+                d_name_arr[d_count] = malloc(MAX_FILENAME_CHAR_LEN * sizeof(char));
+                strncpy(d_name_arr[d_count], dr->d_name, MAX_FILENAME_CHAR_LEN);
+                d_count++;
+            } else {
+                f_name_arr[f_count] = malloc(MAX_FILENAME_CHAR_LEN * sizeof(char));
+                strncpy(f_name_arr[f_count], dr->d_name, MAX_FILENAME_CHAR_LEN);
+                f_count++;
+            }
         }
     }
 
+    qsort(d_name_arr, d_count, sizeof(char*), compare_strings);
+    qsort(f_name_arr, f_count, sizeof(char*), compare_strings);
+
+    printf("dir:\n");
+    for (int i = 0; i < d_count; ++i) {
+        printf(" \t%s\n", d_name_arr[i]);
+    }
+
+    printf("file:\n");
+    for (int i = 0; i < f_count; ++i) {
+        printf(" \t%s\n", f_name_arr[i]);
+    }
+
+    free(d_name_arr);
+    free(f_name_arr);
     closedir(dir);
     return 1;
 }
