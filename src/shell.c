@@ -1,12 +1,17 @@
 #include "../include/shell.h"
 
+const char* project_dir = NULL;
+
+#define PROJECT_BUF_SIZE
 void lsh_loop(void) {
     char* line;
     char ** args;
     int status;
+    
+    project_dir = init_shell_directory();
 
     do {
-        printf("\nSimpleShell:%s > ", get_cwd_display());
+        printf("\nSimpleShell:%s > ", get_cwd_display(project_dir));
         line = lsh_read_line();
         args = lsh_split_line(line);
         status = lsh_execute(args);
@@ -130,33 +135,59 @@ int lsh_execute(char** args) {
     return lsh_launch(args);
 }
 
-#define GET_CWD_BUFSIZE 1024
-char* get_cwd_display(void) {
-    int bufsize = GET_CWD_BUFSIZE;
-
-    static char shell_cwd[GET_CWD_BUFSIZE] = "";
-     // If this is the first time, get the C-Shell directory
-    if (strlen(shell_cwd) == 0) {
-        if (getcwd(shell_cwd, GET_CWD_BUFSIZE) == NULL) {
-            perror("getcwd");
-            exit(EXIT_FAILURE);
-        }
+#define SHELL_INIT_PATH "./home"
+#define MAX_PATH_SIZE 1024
+char* init_shell_directory(void) {
+    char* abs_path = malloc(MAX_PATH_SIZE * sizeof(char));
+    if (abs_path == NULL) {
+        perror("malloc failed");
+        exit(EXIT_FAILURE);
     }
 
-    // Get cwd
-    char* buffer = malloc(bufsize * sizeof(char));
-    if (getcwd(buffer, bufsize) == NULL) {
-        perror("lsh");
+    // Get the absolute path of the home directory
+    if (realpath(SHELL_INIT_PATH, abs_path) == NULL) {
+        perror("realpath");
+        exit(EXIT_FAILURE);
+    }
+
+    // Change to the home directory
+    if (chdir(abs_path) != 0) {
+        perror("chdir");
+        exit(EXIT_FAILURE);
+    }
+
+    return strip_home_suffix(abs_path);
+}
+
+#define GET_CWD_BUFSIZE 1024
+char* get_cwd_display(const char* project_dir) {
+    char* buffer = malloc(GET_CWD_BUFSIZE * sizeof(char));
+    if (buffer == NULL) {
+        perror("malloc failed");
+        exit(EXIT_FAILURE);
+    }
+
+    if (getcwd(buffer, GET_CWD_BUFSIZE) == NULL) {
+        perror("getcwd failed");
         free(buffer);
         exit(EXIT_FAILURE);
     }
 
-    char* relative_path = "";
-    // Check if the current directory starts with the shell directory
-    if (strncmp(buffer, shell_cwd, strlen(shell_cwd)) == 0) {
-        // Display the path starting from the shell directory (relative)
-        relative_path = buffer + strlen(shell_cwd);  // Display relative path from C-Shell directory
+    static char relative_path[GET_CWD_BUFSIZE] = "";
+
+    // Check if the current directory starts with the project directory path
+    if (strncmp(buffer, project_dir, strlen(project_dir)) == 0) {
+        // Calculate the relative path from the project directory
+        snprintf(relative_path, GET_CWD_BUFSIZE, "%s", buffer + strlen(project_dir));
+        if (relative_path[0] == '\0') {
+            // If in the project directory itself, use "/"
+            snprintf(relative_path, GET_CWD_BUFSIZE, "/");
+        }
+    } else {
+        // If not inside the project directory, return the absolute path
+        snprintf(relative_path, GET_CWD_BUFSIZE, "%s", buffer);
     }
 
+    free(buffer);
     return relative_path;
 }

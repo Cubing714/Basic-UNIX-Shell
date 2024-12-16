@@ -2,6 +2,7 @@
 #define COMMANDS_H
 
 #include "../include/utils.h"
+#include "../include/shell.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -11,6 +12,7 @@
 #include <dirent.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <linux/limits.h>
 /*
 List of built-in commands and their corresponding functions
 */

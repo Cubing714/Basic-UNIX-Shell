@@ -1,4 +1,5 @@
 #include "../include/commands.h"
+#include "../include/shell.h"
 
 char* builtin_str[] = {
     "cd",
@@ -37,6 +38,19 @@ int lsh_cd(char** args) {
     if(args[1] == NULL) {
         fprintf(stderr, "lsh: expected argument to\"cd\"\n" );
     } else {
+        // Get the absolute path of the argument
+        char abs_path[PATH_MAX];
+        if (realpath(args[1], abs_path) == NULL)  {
+            perror("lsh");
+            return 1;
+        }
+
+        // Check if the target is inside the project directory
+        if (strncmp(abs_path, project_dir, strlen(project_dir)) != 0) {
+            fprintf(stderr, "lsh: permission denied - cannot leave shell directory\n");
+            return 1;
+        }
+
         if (chdir(args[1]) != 0) {
             perror("lsh");
         }
@@ -52,8 +66,8 @@ int lsh_help(char** args) {
     for (int i = 0; i < lsh_num_builtins(); ++i) {
         printf("  %s\n", builtin_str[i]);
     }
-
-    printf("Use the man command for information on other programs.\n");
+    // Will uncomment when implemented
+    // printf("Use the man command for information on other programs.\n");
     return 1;
 }
 
@@ -63,15 +77,7 @@ int lsh_exit(char** args) {
 
 #define LSH_PWD_BUFSIZE 1024
 int lsh_pwd(char** args) {
-    int bufsize = LSH_PWD_BUFSIZE;
-    char* buffer = malloc(bufsize * sizeof(char));
-    if (getcwd(buffer, bufsize) == NULL) {
-        perror("lsh");
-        free(buffer);
-        return 1;
-    }
-    printf("%s", buffer);
-    free(buffer);
+    printf("%s", get_cwd_display(project_dir));
     return 1;
 }
 

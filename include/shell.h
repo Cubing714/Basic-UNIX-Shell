@@ -8,11 +8,15 @@
 #include <sys/wait.h>
 #include "commands.h"
 
+// Global Variables [ Please dont be mad at me ]
+extern const char* project_dir;
+
 void lsh_loop(void);
 char* lsh_read_line(void);
 char** lsh_split_line(char* line);
 int lsh_launch(char** args);
 int lsh_execute(char** args);
-char* get_cwd_display(void);
+char* init_shell_directory(void);
+char* get_cwd_display(const char* project_dir);
 
 #endif

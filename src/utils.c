@@ -54,3 +54,28 @@ void rm_recursive(const char* path) {
     // Now that directory is empty and closed it removes itself
     rm_directory(path);
 } 
+
+char* set_project_dir(void) {
+    // Get the absolute path of the project directory 
+    char* project_dir = realpath("./", NULL);
+    if (project_dir == NULL) {
+        perror("Failed to get absolute path of the project directory");
+        exit(EXIT_FAILURE);
+    }
+    
+    return project_dir;
+}
+
+char* strip_home_suffix(char* project_dir) {
+    const char* home_suffix = "/home";
+    size_t project_len = strlen(project_dir);
+    size_t suffix_len = strlen(home_suffix);
+
+    // Check if `project_dir` ends with `/home`
+    if (project_len >= suffix_len && strcmp(project_dir + project_len - suffix_len, home_suffix) == 0) {
+        // Null-terminate the string to strip `/home`
+        project_dir[project_len - suffix_len] = '\0';
+    }
+
+    return project_dir;
+}
