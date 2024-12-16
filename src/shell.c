@@ -5,7 +5,7 @@ const char* project_dir = NULL;
 #define PROJECT_BUF_SIZE
 void lsh_loop(void) {
     char* line;
-    char ** args;
+    char** args;
     int status;
     
     project_dir = init_shell_directory();
