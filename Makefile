@@ -7,6 +7,9 @@ LDFLAGS =                       # Linker flags (if any)
 SRC_DIR = ./src
 OBJ_DIR = ./obj
 BIN_DIR = ./bin
+INCLUDE_DIR = ./include
+HOME_DIR = ./home              # User home directory
+CONFIG_DIR = ./config          # Configuration directory
 
 # Files
 SOURCES = $(SRC_DIR)/main.c $(SRC_DIR)/shell.c $(SRC_DIR)/commands.c $(SRC_DIR)/utils.c    # Add your .c files here
@@ -19,6 +22,18 @@ all: $(BIN_DIR) $(EXEC)
 # Create the bin directory if it doesn't exist
 $(BIN_DIR):
 	mkdir -p $(BIN_DIR)
+
+$(OBJ_DIR):
+	mkdir -p $(OBJ_DIR)
+
+$(INCLUDE_DIR):
+	mkdir -p $(INCLUDE_DIR)
+
+$(HOME_DIR):
+	mkdir -p $(HOME_DIR)
+
+$(CONFIG_DIR):
+	mkdir -p $(CONFIG_DIR)
 
 # Rule to link object files into the final executable
 $(EXEC): $(OBJECTS)
