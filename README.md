@@ -36,5 +36,7 @@ This is a lightweight custom shell implemented in C. It allows users to execute 
    ```bash
    cd bin
    ./shell
-   
+
+  OR
+  
    ./bin/shell
