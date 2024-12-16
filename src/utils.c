@@ -2,7 +2,7 @@
 
 void rm_file(const char* filename) {
     if (remove(filename) == 0) {
-        printf("Removed file: %s", filename);
+        printf("Removed file: %s\n", filename);
     } else {
         perror("lsh: error removing file");
     }
