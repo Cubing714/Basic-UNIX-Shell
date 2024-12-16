@@ -26,3 +26,15 @@ This is a lightweight custom shell implemented in C. It allows users to execute 
    ```bash
    git clone https://github.com/Cubing714/Basic-UNIX-Shell.git
    cd Basic-UNIX-Shell
+
+2. Build Project using make
+  ```bash
+   make
+
+## Running Shell
+1. Use build path in project directory
+   ```bash
+   cd bin
+   ./shell
+   
+   ./bin/shell
