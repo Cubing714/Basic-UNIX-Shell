@@ -34,7 +34,7 @@ void rm_recursive(const char* path) {
 
         // Make full path to the entry
         char full_path[PATH_BUF_SIZE];
-        snprintf(full_path, sizeof(full_path), "%s/%s", path, dir_ent->d_name);\
+        snprintf(full_path, sizeof(full_path), "%s/%s", path, dir_ent->d_name);
 
         struct stat statbuf;
         if (stat(full_path, &statbuf) == 0) {

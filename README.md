@@ -12,6 +12,9 @@ This is a lightweight custom shell implemented in C. It allows users to execute 
   - `echo`: Print arguments to the terminal
   - `find`: Search for files in a directory
   - `mkf`: Create a new file if it doesn’t exist
+  - `mkdir`: Create a new directory if it doesn't exist
+  - `clear`: Clear the terminal
+  - `rm`: Remove a file, use -r to remove a directory
 - Error handling for invalid commands or paths
 
 ## Requirements
