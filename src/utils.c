@@ -10,7 +10,7 @@ void rm_file(const char* filename) {
 
 void rm_directory(const char* dir_name) {
     if (rmdir(dir_name) == 0) {
-        printf("Removed directory: %s", dir_name);
+        printf("Removed directory: %s\n", dir_name);
     } else {
         perror("lsh");
     }
