@@ -15,6 +15,18 @@
 
 #define PATH_MAX 4096
 
+// Struct that hold command data
+typedef struct Command {
+    char* name;
+    int privilege; // 0 is privilege mode, 1 is user mode
+    int (*func)(char**); // Function pointer to each command
+    // Maybe also add a string for help command that describe what each command does
+} Command;
+
+// For reference around shell
+extern Command builtin_commands[];
+
+
 /*
 List of built-in commands and their corresponding functions
 */
@@ -32,10 +44,5 @@ int lsh_mkdir(char** args);
 int lsh_clear(char** args);
 int lsh_rm(char** args);
 
-
-extern char* builtin_str[];
-
-// Array of pointers to builtin functions
-extern int (*builtin_func[]) (char**);
 
 #endif

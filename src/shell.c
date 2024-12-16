@@ -127,8 +127,8 @@ int lsh_execute(char** args) {
     }
 
     for (int i = 0; i < lsh_num_builtins(); ++i) {
-        if (strcmp(args[0], builtin_str[i]) == 0) {
-            return (*builtin_func[i])(args);
+        if (strcmp(args[0], builtin_commands[i].name) == 0) {
+            return (*(builtin_commands[i].func))(args);
         }
     }
 

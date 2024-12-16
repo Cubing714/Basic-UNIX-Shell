@@ -1,37 +1,23 @@
 #include "../include/commands.h"
 #include "../include/shell.h"
 
-char* builtin_str[] = {
-    "cd",
-    "help",
-    "exit",
-    "pwd",
-    "echo",
-    "ls",
-    "mkf",
-    "find",
-    "mkdir",
-    "clear",
-    "rm"
+Command builtin_commands[] = {
+    {"cd", 0, &lsh_cd},
+    {"help", 0, &lsh_help},
+    {"exit", 0, &lsh_exit},
+    {"pwd", 0,  &lsh_pwd},
+    {"echo", 0, &lsh_echo},
+    {"ls", 0, &lsh_ls},
+    {"mkf", 0, &lsh_mkf},
+    {"find", 0, &lsh_find},
+    {"mkdir", 0, &lsh_mkdir},
+    {"clear", 0, &lsh_clear},
+    {"rm", 0, &lsh_rm},
 };
 
-// Array of pointers to builtin functions
-int (*builtin_func[]) (char**) = {
-    &lsh_cd,
-    &lsh_help,
-    &lsh_exit,
-    &lsh_pwd,
-    &lsh_echo,
-    &lsh_ls,
-    &lsh_mkf,
-    &lsh_find,
-    &lsh_mkdir,
-    &lsh_clear,
-    &lsh_rm
-};
 
 int lsh_num_builtins() {
-    return sizeof(builtin_str) / sizeof(char*);
+    return sizeof(builtin_commands) / sizeof(Command);
 }
 
 int lsh_cd(char** args) {
@@ -59,12 +45,12 @@ int lsh_cd(char** args) {
 }
 
 int lsh_help(char** args) {
-    printf("Eric's Linux Shell\n");
+    printf("Eric's UNIX Shell\n");
     printf("Type program names and arguments, and hit enter\n");
     printf("The following are built in\n");
 
     for (int i = 0; i < lsh_num_builtins(); ++i) {
-        printf("  %s\n", builtin_str[i]);
+        printf("  %s\n", builtin_commands[i].name);
     }
     // Will uncomment when implemented
     // printf("Use the man command for information on other programs.\n");
