@@ -16,5 +16,7 @@ void rm_recursive(const char* path); // Remove a dir and its contents
 char* set_project_dir(void);
 char* strip_home_suffix(char* project_dir);
 int compare_strings(const void* a, const void* b);
+int file_exists(const char* filename);
+int is_file_empty(const char* filename);
 
 #endif

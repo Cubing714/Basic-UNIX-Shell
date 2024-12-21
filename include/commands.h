@@ -1,8 +1,8 @@
 #ifndef COMMANDS_H
 #define COMMANDS_H
 
-#include "../include/utils.h"
-#include "../include/shell.h"
+#include "./utils.h"
+#include "./shell.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -19,7 +19,7 @@
 // Struct that hold command data
 typedef struct Command {
     char* name;
-    int privilege; // 0 is privilege mode, 1 is user mode
+    int privilege; // 1 is privilege mode, 0 is user mode
     int (*func)(char**); // Function pointer to each command
     // Maybe also add a string for help command that describe what each command does
 } Command;
@@ -43,6 +43,7 @@ int lsh_find(char** args);
 int lsh_mkdir(char** args);
 int lsh_clear(char** args);
 int lsh_rm(char** args);
+int lsh_su(char** args);
 
 
 #endif

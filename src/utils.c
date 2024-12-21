@@ -87,3 +87,16 @@ int compare_strings(const void* a, const void* b) {
 
     return strcmp(str_a, str_b);
 }
+
+int file_exists(const char* filename) {
+    return access(filename, F_OK) == 0;
+}
+
+int is_file_empty(const char* filename) {
+    struct stat st;
+    if (stat(filename, &st) != 0) {
+        perror("Error getting file stats");
+        return -1;
+    }
+    return (st.st_size == 0);
+}

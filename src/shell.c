@@ -1,17 +1,38 @@
 #include "../include/shell.h"
 
-const char* project_dir = NULL;
+const char* g_project_dir = NULL;
+User** g_users = NULL;
+User* g_current_user = NULL;
+int g_num_users = 0;
 
-#define PROJECT_BUF_SIZE
+#define USER_DATA_FILE "./config/user.txt"
 void lsh_loop(void) {
     char* line;
-    char ** args;
+    char** args;
     int status;
-    
-    project_dir = init_shell_directory();
+
+    // Create user data file if it doesn't exists
+    if (!file_exists(USER_DATA_FILE)) {
+        int fd = open(USER_DATA_FILE, O_CREAT, 0644);
+        if (fd == -1) {
+            perror("lsh: error creating file");
+        }
+        close(fd);
+    } 
+
+    if (!is_file_empty(USER_DATA_FILE)) {
+        load_user_data(USER_DATA_FILE, &g_users, &g_num_users);
+    }
+
+    g_project_dir = init_shell_directory();
 
     do {
-        printf("\nSimpleShell:%s > ", get_cwd_display(project_dir));
+        if (g_current_user != NULL) {
+            printf("\nSimpleShell:%s:%s > ", g_current_user->name, get_cwd_display(g_project_dir));
+        } else {
+            printf("\nSimpleShell:guest:%s > ", get_cwd_display(g_project_dir));
+        }
+
         line = lsh_read_line();
         args = lsh_split_line(line);
         status = lsh_execute(args);
@@ -19,6 +40,14 @@ void lsh_loop(void) {
         free(line);
         free(args);
     } while (status);
+
+    // Free memory allocated for users
+    // Will also free current user
+    for (int i = 0; i < g_num_users; ++i) {
+        free(g_users[i]);
+    }
+
+    free(g_users);
 }
 
 #define LSH_RL_BUFSIZE 1024

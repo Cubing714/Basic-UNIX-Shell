@@ -1,18 +1,20 @@
 #include "../include/commands.h"
 #include "../include/shell.h"
+#include "../include/user.h"
 
 Command builtin_commands[] = {
-    {"cd", 1, &lsh_cd},
-    {"help", 1, &lsh_help},
-    {"exit", 1, &lsh_exit},
-    {"pwd", 1,  &lsh_pwd},
-    {"echo", 1, &lsh_echo},
-    {"ls", 1, &lsh_ls},
-    {"mkf", 1, &lsh_mkf},
-    {"find", 1, &lsh_find},
-    {"mkdir", 1, &lsh_mkdir},
-    {"clear", 1, &lsh_clear},
-    {"rm", 1, &lsh_rm},
+    {"cd", 0, &lsh_cd},
+    {"help", 0, &lsh_help},
+    {"exit", 0, &lsh_exit},
+    {"pwd", 0,  &lsh_pwd},
+    {"echo", 0, &lsh_echo},
+    {"ls", 0, &lsh_ls},
+    {"mkf", 0, &lsh_mkf},
+    {"find", 0, &lsh_find},
+    {"mkdir", 0, &lsh_mkdir},
+    {"clear", 0, &lsh_clear},
+    {"rm", 0, &lsh_rm},
+    {"su", 0, &lsh_su},
 };
 
 
@@ -32,7 +34,7 @@ int lsh_cd(char** args) {
         }
 
         // Check if the target is inside the project directory
-        if (strncmp(abs_path, project_dir, strlen(project_dir)) != 0) {
+        if (strncmp(abs_path, g_project_dir, strlen(g_project_dir)) != 0) {
             fprintf(stderr, "lsh: permission denied - cannot leave shell directory\n");
             return 1;
         }
@@ -63,7 +65,7 @@ int lsh_exit(char** args) {
 
 #define LSH_PWD_BUFSIZE 1024
 int lsh_pwd(char** args) {
-    printf("%s", get_cwd_display(project_dir));
+    printf("%s", get_cwd_display(g_project_dir));
     return 1;
 }
 
@@ -174,8 +176,9 @@ int lsh_mkf(char** args) {
         }
 
         printf("File created: %s", filename);
+        close(fd);
     }
-
+    
     return 1;
 }
 
@@ -255,5 +258,34 @@ int lsh_rm(char** args) {
     } else {
         rm_file(args[1]);
     }
+    return 1;
+}
+
+int lsh_su(char** args) {
+    if (args[1] == NULL || args[2] == NULL) {
+        fprintf(stderr, "lsh: expected arguments to \"su\"\n");
+        return 1;
+    }
+
+    // Check if the user exists
+    if (g_users != NULL) {
+        for (int i = 0; i < g_num_users; ++i) {
+            // Check if the user is initialized and the name matches
+            if (args[1] != NULL && g_users[i]->name != NULL && strcmp(args[1], g_users[i]->name) == 0) {
+                if (args[2] != NULL && g_users[i]->password != NULL && strcmp(args[2], g_users[i]->password) == 0) {
+                    printf("Welcome %s\n", g_users[i]->name);
+                    g_current_user = g_users[i];
+                    return 1;
+                } else {
+                    fprintf(stderr, "lsh: incorrect password\n");
+                    return 1;
+                }
+            }
+        }
+    } else {
+        fprintf(stderr, "lsh: user data not loaded\n");
+    }
+
+    fprintf(stderr, "lsh: user not found\n");
     return 1;
 }
