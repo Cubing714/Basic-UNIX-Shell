@@ -3,6 +3,8 @@
 
 #include "./utils.h"
 #include "./shell.h"
+#include "./user.h"
+#include "./global.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>

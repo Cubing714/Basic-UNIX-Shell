@@ -33,8 +33,10 @@ int lsh_cd(char** args) {
             return 1;
         }
 
+        ShellState* g_state = get_shell_state();
+
         // Check if the target is inside the project directory
-        if (strncmp(abs_path, g_project_dir, strlen(g_project_dir)) != 0) {
+        if (strncmp(abs_path, g_state->project_dir, strlen(g_state->project_dir)) != 0) {
             fprintf(stderr, "lsh: permission denied - cannot leave shell directory\n");
             return 1;
         }
@@ -65,7 +67,8 @@ int lsh_exit(char** args) {
 
 #define LSH_PWD_BUFSIZE 1024
 int lsh_pwd(char** args) {
-    printf("%s", get_cwd_display(g_project_dir));
+    ShellState* g_state = get_shell_state();
+    printf("%s", get_cwd_display(g_state->project_dir));
     return 1;
 }
 
@@ -267,14 +270,16 @@ int lsh_su(char** args) {
         return 1;
     }
 
+    ShellState* g_state = get_shell_state();
+
     // Check if the user exists
-    if (g_users != NULL) {
-        for (int i = 0; i < g_num_users; ++i) {
+    if (g_state->users != NULL) {
+        for (int i = 0; i < g_state->num_users; ++i) {
             // Check if the user is initialized and the name matches
-            if (args[1] != NULL && strcmp(args[1], g_users[i]->name) == 0) {
-                if (args[2] != NULL && strcmp(args[2], g_users[i]->password) == 0) {
-                    printf("Welcome %s\n", g_users[i]->name);
-                    g_current_user = g_users[i];
+            if (args[1] != NULL && strcmp(args[1], g_state->users[i]->name) == 0) {
+                if (args[2] != NULL && strcmp(args[2], g_state->users[i]->password) == 0) {
+                    printf("Welcome %s\n", g_state->users[i]->name);
+                    g_state->current_user = g_state->users[i];
                     return 1;
                 } else {
                     fprintf(stderr, "lsh: incorrect password\n");

@@ -8,16 +8,11 @@
 #include <sys/wait.h>
 #include "./commands.h"
 #include "./user.h"
+#include "./utils.h"
+#include "./global.h"
 
 #define MAX_NUM_DIRECTORIES 100
 #define MAX_FILENAME_CHAR_LEN 255
-
-// Global Variables [ Please dont be mad at me ]
-extern const char* g_project_dir;
-extern User** g_users; 
-extern User* g_current_user;
-extern int g_num_users;
-
 
 void lsh_loop(void);
 char* lsh_read_line(void);

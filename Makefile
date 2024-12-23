@@ -15,17 +15,21 @@ INCLUDE_DIR = ./include
 HOME_DIR = ./home              # User home directory
 CONFIG_DIR = ./config          # Configuration directory
 
-# Files
-SOURCES = $(SRC_DIR)/main.c $(SRC_DIR)/shell.c $(SRC_DIR)/commands.c $(SRC_DIR)/utils.c $(SRC_DIR)/user.c    # Add your .c files here
-OBJECTS = $(OBJ_DIR)/main.o $(OBJ_DIR)/shell.o $(OBJ_DIR)/commands.o $(OBJ_DIR)/utils.o $(OBJ_DIR)/user.o  # Corresponding .o files
-EXEC = $(BIN_DIR)/shell        # Final executable
+# Source files (find .c files in specified directories)
+SRC = $(wildcard $(SRC_DIR)/*.c)
+
+# Object files
+OBJ = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRC))
+
+# Final executable
+EXEC = $(BIN_DIR)/shell        
 
 # Default target (make all)
 all: $(BIN_DIR) $(EXEC)
 
 # Rule to link object files into the final executable
-$(EXEC): $(OBJECTS)
-	$(CC) $(OBJECTS) -o $(EXEC) $(LDFLAGS)
+$(EXEC): $(OBJ)
+	$(CC) $(OBJ) -o $(EXEC) $(LDFLAGS)
 
 # Rule to compile each .c file into a .o file
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
