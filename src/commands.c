@@ -271,8 +271,8 @@ int lsh_su(char** args) {
     if (g_users != NULL) {
         for (int i = 0; i < g_num_users; ++i) {
             // Check if the user is initialized and the name matches
-            if (args[1] != NULL && g_users[i]->name != NULL && strcmp(args[1], g_users[i]->name) == 0) {
-                if (args[2] != NULL && g_users[i]->password != NULL && strcmp(args[2], g_users[i]->password) == 0) {
+            if (args[1] != NULL && strcmp(args[1], g_users[i]->name) == 0) {
+                if (args[2] != NULL && strcmp(args[2], g_users[i]->password) == 0) {
                     printf("Welcome %s\n", g_users[i]->name);
                     g_current_user = g_users[i];
                     return 1;
