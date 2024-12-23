@@ -5,7 +5,7 @@ User** g_users = NULL;
 User* g_current_user = NULL;
 int g_num_users = 0;
 
-#define USER_DATA_FILE "./config/user.txt"
+#define USER_DATA_FILE "./config/user.dat"
 void lsh_loop(void) {
     char* line;
     char** args;

@@ -5,7 +5,7 @@
 
 #Ignore user-specific files
 home/
-config/
+config/s*
 
 # Ignore executables
 shell
