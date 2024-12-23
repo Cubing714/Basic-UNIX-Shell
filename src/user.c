@@ -67,9 +67,6 @@ void load_user_data(const char* filename, User*** users, int* num_users) {
 
         (*users)[*num_users] = new_user;
         (*num_users)++; // Increment number of users
-
-        //free(new_user);
-
     }
 
     fclose(file);
