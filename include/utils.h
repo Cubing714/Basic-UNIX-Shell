@@ -18,5 +18,6 @@ char* strip_home_suffix(char* project_dir);
 int compare_strings(const void* a, const void* b);
 int file_exists(const char* filename);
 int is_file_empty(const char* filename);
+int dir_exists(const char* dir_name);
 
 #endif

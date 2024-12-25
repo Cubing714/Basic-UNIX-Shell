@@ -1,7 +1,7 @@
 #include "../include/user.h"
-#include "../include/shell.h"
+#include "../include/global.h"
 
-User* create_user(const char* name, const char* password, const char* home_dir, int privilege) {
+User* create_user(const char* name, const char* password, int privilege) {
     User* user = malloc(sizeof(User));
     if (user == NULL) {
         perror("lsh: allocation failed");
@@ -14,9 +14,26 @@ User* create_user(const char* name, const char* password, const char* home_dir, 
     strncpy(user->password, password, MAX_PASS_LEN - 1);
     user->password[MAX_PASS_LEN - 1] = '\0';
 
-
-    user->home_dir = home_dir; 
     user->privilege = privilege;
+
+    // Allocate memory for "./home/" + user_name + null terminator
+    size_t len = strlen("./home/") + strlen(user->name) + 1;
+    user->home_dir = malloc(len); 
+    if (user->home_dir == NULL) {
+        perror("lsh: allocation error");
+        exit(EXIT_FAILURE);
+    }
+
+    strcpy(user->home_dir, "./home/");
+    strcat(user->home_dir, user->name);
+    
+    if (!dir_exists(user->home_dir)) {
+        if (mkdir(user->home_dir, 0700) == -1) {
+            perror("lsh: failed to create home directory");
+            exit(EXIT_FAILURE);
+        } 
+    }
+
     return user;
 }
 
@@ -45,7 +62,7 @@ void load_user_data(const char* filename, User*** users, int* num_users) {
     int privilege;
 
     while (fscanf(file, "%49s %49s %d", name, password, &privilege) == 3) {
-        User* new_user = create_user(name, password, "./home", privilege);
+        User* new_user = create_user(name, password, privilege);
         if (new_user == NULL) {
             fprintf(stderr, "Failed to create new user\n");
             continue;
@@ -70,4 +87,22 @@ void load_user_data(const char* filename, User*** users, int* num_users) {
     }
 
     fclose(file);
+}
+
+void create_guest_user(User*** users, int* num_users) {
+    User* guest = create_user("guest", "guest", 0);
+    guest->home_dir = "./home/guest";
+    if (!dir_exists(guest->home_dir)) {
+        if (mkdir(guest->home_dir, 0700) == -1) {
+            perror("lsh: failed to create home directory");
+            exit(EXIT_FAILURE);
+        }
+    }
+    
+    (*users)[*num_users] = guest;
+    (*num_users)++;
+
+    ShellState* g_state = get_shell_state();
+
+    g_state->current_user = guest;
 }

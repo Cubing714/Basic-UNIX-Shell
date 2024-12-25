@@ -2,6 +2,7 @@
 #include "../include/global.h"
 
 #define USER_DATA_FILE "./config/user.dat"
+#define MAX_PATH_SIZE 1024
 void lsh_loop(void) {
     char* line;
     char** args;
@@ -9,27 +10,13 @@ void lsh_loop(void) {
 
     ShellState* g_state = get_shell_state();
 
-    // Create user data file if it doesn't exists
-    if (!file_exists(USER_DATA_FILE)) {
-        int fd = open(USER_DATA_FILE, O_CREAT, 0644);
-        if (fd == -1) {
-            perror("lsh: error creating file");
-        }
-        close(fd);
-    } 
-
-    if (!is_file_empty(USER_DATA_FILE)) {
-        load_user_data(USER_DATA_FILE, &g_state->users, &g_state->num_users);
-    }
-
-    g_state->project_dir = init_shell_directory();
+    init_shell();
 
     do {
         if (g_state->current_user != NULL) {
             printf("\nSimpleShell:%s:%s > ", g_state->current_user->name, get_cwd_display(g_state->project_dir));
-        } else {
-            printf("\nSimpleShell:guest:%s > ", get_cwd_display(g_state->project_dir));
-        }
+        } 
+
 
         line = lsh_read_line();
         args = lsh_split_line(line);
@@ -134,28 +121,37 @@ int lsh_execute(char** args) {
     return 1;
 }
 
-#define SHELL_INIT_PATH "./home"
-#define MAX_PATH_SIZE 1024
-char* init_shell_directory(void) {
-    char* abs_path = malloc(MAX_PATH_SIZE * sizeof(char));
-    if (abs_path == NULL) {
-        perror("malloc failed");
+void init_shell(void) {
+
+    ShellState* g_state = get_shell_state();
+
+    // Create user data file if it doesn't exists
+    if (!file_exists(USER_DATA_FILE)) {
+        int fd = open(USER_DATA_FILE, O_CREAT, 0644);
+        if (fd == -1) {
+            perror("lsh: error creating file");
+        }
+        close(fd);
+    } 
+
+    if (!is_file_empty(USER_DATA_FILE)) {
+        load_user_data(USER_DATA_FILE, &g_state->users, &g_state->num_users);
+        create_guest_user(&g_state->users, &g_state->num_users);
+
+    } 
+
+    if (getcwd(g_state->project_dir, PATH_MAX) == NULL) {
+        perror("lsh: error getting project directory");
         exit(EXIT_FAILURE);
     }
 
-    // Get the absolute path of the home directory
-    if (realpath(SHELL_INIT_PATH, abs_path) == NULL) {
-        perror("realpath");
-        exit(EXIT_FAILURE);
+    // Set cwd to users home directory
+    if (g_state->current_user != NULL) {
+        if (chdir(g_state->current_user->home_dir) != 0) {
+            perror("lsh: error changing to user home directory");
+            exit(EXIT_FAILURE);
+        }
     }
-
-    // Change to the home directory
-    if (chdir(abs_path) != 0) {
-        perror("chdir");
-        exit(EXIT_FAILURE);
-    }
-
-    return strip_home_suffix(abs_path);
 }
 
 #define GET_CWD_BUFSIZE 1024

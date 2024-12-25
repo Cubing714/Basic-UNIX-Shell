@@ -280,6 +280,22 @@ int lsh_su(char** args) {
                 if (args[2] != NULL && strcmp(args[2], g_state->users[i]->password) == 0) {
                     printf("Welcome %s\n", g_state->users[i]->name);
                     g_state->current_user = g_state->users[i];
+                    
+                    // Get path of the user's home directory
+                    char* dir_buffer = malloc(PATH_MAX * sizeof(char));
+
+                    strcpy(dir_buffer, g_state->project_dir);
+                    if (g_state->current_user->home_dir[0] != '/') {
+                        char* user_home_dir = g_state->current_user->home_dir + 1;
+                        strcat(dir_buffer, user_home_dir);
+                    }
+
+                    // Switch to user's home directory
+                    if (chdir(dir_buffer) != 0) {
+                        perror("lsh: error changing to user home directory");
+                        exit(EXIT_FAILURE);
+                    }
+                    free(dir_buffer);
                     return 1;
                 } else {
                     fprintf(stderr, "lsh: incorrect password\n");

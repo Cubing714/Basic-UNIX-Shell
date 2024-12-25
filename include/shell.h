@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <sys/wait.h>
+#include <limits.h>
 #include "./commands.h"
 #include "./user.h"
 #include "./utils.h"
@@ -19,7 +20,7 @@ char* lsh_read_line(void);
 char** lsh_split_line(char* line);
 int lsh_launch(char** args);
 int lsh_execute(char** args);
-char* init_shell_directory(void);
+void init_shell(void);
 char* get_cwd_display(const char* project_dir);
 
 #endif

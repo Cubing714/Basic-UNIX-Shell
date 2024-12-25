@@ -100,3 +100,8 @@ int is_file_empty(const char* filename) {
     }
     return (st.st_size == 0);
 }
+
+int dir_exists(const char* dir_name) {
+    struct stat st;
+    return stat(dir_name, &st) == 0 && S_ISDIR(st.st_mode);
+}
