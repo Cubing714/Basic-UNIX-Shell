@@ -1,4 +1,5 @@
 #include "../include/user.h"
+#include "../include/shell.h"
 #include "../include/global.h"
 
 User* create_user(const char* name, const char* password, int privilege) {
@@ -38,7 +39,19 @@ User* create_user(const char* name, const char* password, int privilege) {
 }
 
 void save_user_data() {
+    ShellState* g_state = get_shell_state();
 
+    // Create user data file if it doesn't exists
+    if (!file_exists(USER_DATA_FILE)) {
+        int fd = open(USER_DATA_FILE, O_CREAT, 0644);
+        if (fd == -1) {
+            perror("lsh: error creating file");
+        }
+    } 
+
+    for (int i = 0; i < g_state->num_users; ++i) {
+        
+    }
 }
 
 void load_user_data(const char* filename, User*** users, int* num_users) {

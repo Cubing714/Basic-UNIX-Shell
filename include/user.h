@@ -7,8 +7,10 @@
 #include <string.h>
 #include "./utils.h"
 
+#define USER_DATA_FILE "./config/user.dat"
 #define MAX_NAME_LEN 50
 #define MAX_PASS_LEN 50
+
 typedef struct User {
     char name[MAX_NAME_LEN];
     char password[MAX_PASS_LEN];

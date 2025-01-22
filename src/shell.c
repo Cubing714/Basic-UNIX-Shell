@@ -1,7 +1,6 @@
 #include "../include/shell.h"
 #include "../include/global.h"
 
-#define USER_DATA_FILE "./config/user.dat"
 #define MAX_PATH_SIZE 1024
 void lsh_loop(void) {
     char* line;
@@ -137,8 +136,21 @@ void init_shell(void) {
     if (!is_file_empty(USER_DATA_FILE)) {
         load_user_data(USER_DATA_FILE, &g_state->users, &g_state->num_users);
         create_guest_user(&g_state->users, &g_state->num_users);
+    } else {
+        char* name;
+        char* pass;
 
-    } 
+        // Create the first root user
+        printf("No users detected please create root user.\n");
+        printf("Username: ");
+        name = lsh_read_line();
+        printf("Password: ");
+        pass = lsh_read_line();
+        
+        User* root_user = create_user(name, pass, 1);
+        
+        g_state->current_user = root_user;
+    }
 
     if (getcwd(g_state->project_dir, PATH_MAX) == NULL) {
         perror("lsh: error getting project directory");
