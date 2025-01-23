@@ -144,8 +144,10 @@ void init_shell(void) {
         printf("No users detected please create root user.\n");
         printf("Username: ");
         name = lsh_read_line();
+        disable_echo();
         printf("Password: ");
         pass = lsh_read_line();
+        enable_echo();
         
         User* root_user = create_user(name, pass, 1);
         

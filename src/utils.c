@@ -105,3 +105,20 @@ int dir_exists(const char* dir_name) {
     struct stat st;
     return stat(dir_name, &st) == 0 && S_ISDIR(st.st_mode);
 }
+
+// Disable the terminal echo to hide things like passwords
+// TCSANOW means to make the change immediately 
+void disable_echo(void) {
+    struct termios t;
+    tcgetattr(STDIN_FILENO, &t);            // Get terminal attributes
+    t.c_lflag &= ~ECHO;                     // Disable terminal echo
+    tcsetattr(STDIN_FILENO, TCSANOW, &t);   // Set the attributes
+}
+
+// Enable the terminal echo whether it is on or off
+void enable_echo(void) {
+    struct termios t;
+    tcgetattr(STDIN_FILENO, &t);
+    t.c_lflag |= ECHO;
+    tcsetattr(STDIN_FILENO, TCSANOW, &t);
+}
