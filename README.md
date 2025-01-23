@@ -14,6 +14,7 @@ This is a lightweight custom shell implemented in C. It allows users to execute 
   - `mkdir`: Create a new directory if it doesn't exist
   - `clear`: Clear the terminal
   - `rm`: Remove a file, use -r to remove a directory
+  - `su`: Switch user
 - Error handling for invalid commands or paths
 
 ## Requirements
