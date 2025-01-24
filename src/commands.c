@@ -62,6 +62,7 @@ int lsh_help(char** args) {
 }
 
 int lsh_exit(char** args) {
+    save_user_data();
     return 0;
 }
 

@@ -19,7 +19,7 @@ typedef struct User {
 } User;
 
 User* create_user(const char* name, const char* password, int privilege);
-void save_user_data();
+void save_user_data(void);
 void load_user_data(const char* filename, User*** users, int* num_users);
 void create_guest_user(User*** users, int* num_users);
 

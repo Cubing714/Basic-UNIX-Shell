@@ -38,20 +38,39 @@ User* create_user(const char* name, const char* password, int privilege) {
     return user;
 }
 
-void save_user_data() {
+void save_user_data(void) {
     ShellState* g_state = get_shell_state();
+    
+    // get absolute path then check if it exists
+    // Still trying to fix
+    
+    char user_dat_abs_path[PATH_MAX];
+    strcpy(user_dat_abs_path, g_state->project_dir);
+    strcat(user_dat_abs_path, "/config/user.dat");
 
     // Create user data file if it doesn't exists
-    if (!file_exists(USER_DATA_FILE)) {
-        int fd = open(USER_DATA_FILE, O_CREAT, 0644);
+    if (!file_exists(user_dat_abs_path)) {
+        int fd = open(user_dat_abs_path, O_CREAT, 0644);
         if (fd == -1) {
             perror("lsh: error creating file");
         }
+        close(fd);
     } 
 
-    for (int i = 0; i < g_state->num_users; ++i) {
-        
+    FILE* file = fopen(user_dat_abs_path, "w"); 
+    if (file == NULL) {
+        perror("lsh: failed to open file\n");
+        exit(EXIT_FAILURE);
     }
+
+    printf("%d", g_state->num_users);
+    for (int i = 0; i < g_state->num_users; ++i) {
+        printf("%s", g_state->users[i]->name);
+        User* user = g_state->users[i];
+        fprintf(file, "%s %s %d", user->name, user->password, user->privilege);
+    }
+
+    fclose(file);
 }
 
 void load_user_data(const char* filename, User*** users, int* num_users) {
@@ -74,7 +93,7 @@ void load_user_data(const char* filename, User*** users, int* num_users) {
     char password[MAX_PASS_LEN];
     int privilege;
 
-    while (fscanf(file, "%49s %49s %d", name, password, &privilege) == 3) {
+    while (fscanf(file, "%s %s %d", name, password, &privilege) == 3) {
         User* new_user = create_user(name, password, privilege);
         if (new_user == NULL) {
             fprintf(stderr, "Failed to create new user\n");
@@ -93,7 +112,6 @@ void load_user_data(const char* filename, User*** users, int* num_users) {
             }
             *users = temp;  // Update *users with the resized memory
         }
-
 
         (*users)[*num_users] = new_user;
         (*num_users)++; // Increment number of users

@@ -140,10 +140,19 @@ void init_shell(void) {
         char* name;
         char* pass;
 
+        int capacity = 10; // Arbitrary number for space of users
+        g_state->num_users = 0;
+        g_state->users = malloc(capacity * sizeof(User));
+        if (!g_state->users) {
+            perror("lsh: allocation error\n");
+            exit(EXIT_FAILURE);
+        }
+
         // Create the first root user
         printf("No users detected please create root user.\n");
         printf("Username: ");
         name = lsh_read_line();
+
         disable_echo();
         printf("Password: ");
         pass = lsh_read_line();
@@ -152,6 +161,8 @@ void init_shell(void) {
         User* root_user = create_user(name, pass, 1);
         
         g_state->current_user = root_user;
+        g_state->users[0] = root_user;
+        g_state->num_users++;
     }
 
     if (getcwd(g_state->project_dir, PATH_MAX) == NULL) {
