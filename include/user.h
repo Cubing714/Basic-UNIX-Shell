@@ -16,6 +16,7 @@ typedef struct User {
     char password[MAX_PASS_LEN];
     char* home_dir;
     int privilege;
+    int guest; // if true then its a guest
 } User;
 
 User* create_user(const char* name, const char* password, int privilege);

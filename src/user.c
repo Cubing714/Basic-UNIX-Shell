@@ -63,11 +63,11 @@ void save_user_data(void) {
         exit(EXIT_FAILURE);
     }
 
-    printf("%d", g_state->num_users);
     for (int i = 0; i < g_state->num_users; ++i) {
-        printf("%s", g_state->users[i]->name);
         User* user = g_state->users[i];
-        fprintf(file, "%s %s %d", user->name, user->password, user->privilege);
+        if (!user->guest) {
+            fprintf(file, "%s %s %d\n", user->name, user->password, user->privilege);
+        }
     }
 
     fclose(file);
@@ -122,6 +122,7 @@ void load_user_data(const char* filename, User*** users, int* num_users) {
 
 void create_guest_user(User*** users, int* num_users) {
     User* guest = create_user("guest", "guest", 0);
+    guest->guest = 1; // Set it to true
     guest->home_dir = "./home/guest";
     if (!dir_exists(guest->home_dir)) {
         if (mkdir(guest->home_dir, 0700) == -1) {
